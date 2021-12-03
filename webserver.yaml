@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver
+  labels:
+    app: apache
+    tipo: "desarrollo"
+spec:
+  replicas: 7
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - name: practica-php
+        image: dony1809/practica-php:v1
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: volumenes
+          mountPath: /var/www/html/
+      volumes:
+        - name: volumenes
+          hostPath:
+            path: /php

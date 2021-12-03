@@ -1,0 +1,40 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: base-datos
+  labels:
+    tipo: "desarrollo"
+spec:
+  selector:
+    matchLabels:
+      app: bd
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: bd
+    spec:
+      containers:
+      - name: bd
+        image: dony1809/dbmysql:latest
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_DATABASE
+          value: company
+        - name: MYSQL_USER
+          value: dony
+        - name: MYSQL_PASSWORD
+          value: dony1
+        args: ["--default-authentication-plugin=mysql_native_password"]
+        ports:
+        - containerPort: 3306
+        name: bd
+        volumeMounts:
+          - name: mysql-storage
+            mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: db-volumenes
